@@ -1,50 +1,65 @@
-import serial
+import RPi.GPIO as GPIO
+import spidev
 import time
 
-# Function to list available serial ports
-def list_available_serial_ports():
-    ports = serial.tools.list_ports.comports()
-    if not ports:
-        print("No serial ports found.")
-    else:
-        print("Available serial ports:")
-        for port, desc, hwid in sorted(ports):
-            print(f"Port: {port}, Description: {desc}, Hardware ID: {hwid}")
+# Initialize SPI device
+spi = spidev.SpiDev()
+spi.open(0,0)
 
-# Replace with the correct serial port (e.g., '/dev/ttyUSB0')
-serial_port = '22'  # Replace 'x' with the correct serial port number
-baud_rate = 9600
+# Function to read SPI data from MCP3008 chip
+def read_spi(channel):
+    adc = spi.xfer2([1,(8+channel)<<4,0])
+    data = ((adc[1]&3) << 8) + adc[2]
+    return data
 
-def initialize_serial_connection(port, baud):
-    try:
-        ser = serial.Serial(port, baud)
-        return ser
-    except Exception as e:
-        print(f"Error: {e}")
-        return None
+# Function to calculate voltage
+def get_voltage(data, reference=3.3):
+    return (data / 1023.0) * reference
 
-def read_powerbank_data(ser):
-    try:
-        data = ser.readline().decode().strip()
-        return data
-    except Exception as e:
-        print(f"Error reading data: {e}")
-        return None
+# Function to actuate H-bridge
+def actuate_h_bridge(state):
+    if state == "FORWARD":
+        GPIO.output(17, True)
+        GPIO.output(18, False)
+        GPIO.output(22, True)
+        GPIO.output(23, False)
+    elif state == "REVERSE":
+        GPIO.output(17, False)
+        GPIO.output(18, True)
+        GPIO.output(22, False)
+        GPIO.output(23, True)
+    else: # STOP or anything else
+        GPIO.output(17, False)
+        GPIO.output(18, False)
+        GPIO.output(22, False)
+        GPIO.output(23, False)
 
-if __name__ == '__main__':
-    # List available serial ports
-    list_available_serial_ports()
+# Setup GPIO
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(17, GPIO.OUT)
+GPIO.setup(18, GPIO.OUT)
+GPIO.setup(22, GPIO.OUT)
+GPIO.setup(23, GPIO.OUT)
 
-    ser = initialize_serial_connection(serial_port, baud_rate)
-    if ser:
-        try:
-            while True:
-                data = read_powerbank_data(ser)
-                if data:
-                    print(f"Powerbank Status: {data}")
-                time.sleep(1)
-        except KeyboardInterrupt:
-            ser.close()
-            print("Serial connection closed.")
-    else:
-        print("Failed to initialize the serial connection. Check your settings.")
+try:
+    while True:
+        # Read voltage and current from ADC (assuming voltage is on channel 0 and current on channel 1)
+        voltage_data = read_spi(0)
+        current_data = read_spi(1)
+        
+        voltage = get_voltage(voltage_data)
+        current = get_voltage(current_data)  # Add calculation based on your current sensor
+        
+        print(f"Voltage: {voltage}V, Current: {current}A")
+        
+        # Actuate H-bridge based on some condition (replace with your own logic)
+        if voltage > 2.5:
+            actuate_h_bridge("FORWARD")
+        else:
+            actuate_h_bridge("STOP")
+        
+        time.sleep(1)
+
+except KeyboardInterrupt:
+    GPIO.cleanup()
+    print("Exiting.")
