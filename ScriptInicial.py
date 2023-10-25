@@ -1,10 +1,9 @@
 import serial
-import serial.tools.list_ports
 import time
 
 # Function to list available serial ports
 def list_available_serial_ports():
-    ports = list(serial.tools.list_ports.comports())
+    ports = serial.tools.list_ports.comports()
     if not ports:
         print("No serial ports found.")
     else:
