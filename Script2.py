@@ -36,16 +36,16 @@ if __name__ == '__main__':
     # List available serial ports
     list_available_serial_ports()
 
-    ser = initialize_serial_connection(serial_port, baud_rate)
-    if ser:
+    serial_connection = initialize_serial_connection(serial_port, baud_rate)
+    if serial_connection:
         try:
             while True:
-                data = read_powerbank_data(ser)
+                data = read_powerbank_data(serial_connection)
                 if data:
                     print(f"Powerbank Status: {data}")
                 time.sleep(1)
         except KeyboardInterrupt:
-            ser.close()
+            serial_connection.close()
             print("Serial connection closed.")
     else:
         print("Failed to initialize the serial connection. Check your settings.")
