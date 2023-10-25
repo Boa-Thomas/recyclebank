@@ -1,18 +1,19 @@
 import serial
+import os
 import time
 
 # Function to list available serial ports
 def list_available_serial_ports():
-    ports = serial.tools.list_ports.comports()
+    ports = [f for f in os.listdir('/dev/') if f.startswith('ttyS') or f.startswith('ttyUSB')]
     if not ports:
         print("No serial ports found.")
     else:
         print("Available serial ports:")
-        for port, desc, hwid in sorted(ports):
-            print(f"Port: {port}, Description: {desc}, Hardware ID: {hwid}")
+        for port in ports:
+            print(f"Port: /dev/{port}")
 
 # Replace with the correct serial port (e.g., '/dev/ttyUSB0')
-serial_port = '22'  # Replace 'x' with the correct serial port number
+serial_port = '/dev/ttyUSB0'  # Replace with the correct serial port
 baud_rate = 9600
 
 def initialize_serial_connection(port, baud):
