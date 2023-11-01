@@ -1,6 +1,7 @@
 import RPi.GPIO as GPIO
 import spidev
 import time
+import requests  # For the webserver
 
 # Initialize SPI device
 spi = spidev.SpiDev()
@@ -63,6 +64,9 @@ GPIO.setup(22, GPIO.OUT)
 GPIO.setup(23, GPIO.OUT)
 GPIO.setup(24, GPIO.OUT)
 
+# Define the URL of your web server
+server_url = "http://example.com/api/endpoint"
+
 try:
     while True:
         # Read voltage and current from separate modules
@@ -73,6 +77,19 @@ try:
         current = get_current(current_data)
 
         print(f"Voltage: {voltage}V, Current: {current}A")
+
+        # Create a dictionary with the data to post
+        data_to_post = {
+            "voltage": voltage,
+            "current": current
+        }
+
+        # Post data to the web server
+        response = requests.post(server_url, json=data_to_post)
+        if response.status_code == 200:
+            print("Data sent successfully.")
+        else:
+            print(f"Failed to send data. Status code: {response.status_code}")
 
         # Read keyboard input for actuation
         user_input = input("Do you want to actuate the H-bridge? (yes/no): ")
