@@ -47,7 +47,7 @@ GPIO.setup(17, GPIO.OUT)
 GPIO.setup(18, GPIO.OUT)
 GPIO.setup(22, GPIO.OUT)
 GPIO.setup(23, GPIO.OUT)
-
+a
 try:
     while True:
         # Read voltage and current from ADC (assuming voltage is on channel 0 and current on channel 1)
