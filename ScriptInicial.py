@@ -6,11 +6,21 @@ import time
 spi = spidev.SpiDev()
 spi.open(0, 0)
 
-# Function to read SPI data from MCP3008 chip
-def read_spi(channel):
-    adc = spi.xfer2([1, (8 + channel) << 4, 0])
-    data = ((adc[1] & 3) << 8) + adc[2]
-    return data
+# Function to read voltage data from a separate module connected to SPI channel 0
+def read_voltage(channel):
+    # Modify this to read voltage data from your specific voltage module
+    # The following line is just a placeholder:
+    voltage_data = spi.xfer2([1, (8 + channel) << 4, 0])
+    voltage = ((voltage_data[1] & 3) << 8) + voltage_data[2]
+    return voltage
+
+# Function to read current data from a separate module connected to SPI channel 1
+def read_current(channel):
+    # Modify this to read current data from your specific current module
+    # The following line is just a placeholder:
+    current_data = spi.xfer2([1, (8 + channel) << 4, 0])
+    current = ((current_data[1] & 3) << 8) + current_data[2]
+    return current
 
 # Function to calculate voltage from sensor reading
 def get_voltage(data, reference=3.3):
@@ -55,9 +65,9 @@ GPIO.setup(24, GPIO.OUT)
 
 try:
     while True:
-        # Read voltage and current from ADC (assuming voltage is on channel 0 and current on channel 1)
-        voltage_data = read_spi(0)
-        current_data = read_spi(1)
+        # Read voltage and current from separate modules
+        voltage_data = read_voltage(0)  # Assuming voltage on channel 0
+        current_data = read_current(1)  # Assuming current on channel 1
 
         voltage = get_voltage(voltage_data)
         current = get_current(current_data)
