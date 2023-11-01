@@ -4,7 +4,7 @@ import time
 
 # Initialize SPI device
 spi = spidev.SpiDev()
-spi.open(0,0)
+spi.open(0, 0)
 
 # Function to read SPI data from MCP3008 chip
 def read_spi(channel):
@@ -41,13 +41,18 @@ def actuate_h_bridge(state):
         GPIO.output(22, False)
         GPIO.output(23, False)
 
+# Function to control the relay
+def control_relay(state):
+    GPIO.output(24, state)  # GPIO pin 24 controls the relay
+
 # Setup GPIO
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(17, GPIO.OUT)
 GPIO.setup(18, GPIO.OUT)
 GPIO.setup(22, GPIO.OUT)
 GPIO.setup(23, GPIO.OUT)
-a
+GPIO.setup(24, GPIO.OUT)
+
 try:
     while True:
         # Read voltage and current from ADC (assuming voltage is on channel 0 and current on channel 1)
@@ -64,8 +69,10 @@ try:
 
         if user_input.lower() == 'yes':
             actuate_h_bridge("FORWARD")
+            control_relay(True)  # Turn on the relay
         elif user_input.lower() == 'no':
             actuate_h_bridge("STOP")
+            control_relay(False)  # Turn off the relay
 
 except KeyboardInterrupt:
     GPIO.cleanup()
