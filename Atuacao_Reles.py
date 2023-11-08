@@ -28,8 +28,8 @@ def cleanup():
 try:
     setup_relays()
     activate_relay1_and_relay3()  # Ativar IN1 e IN3
-    time.sleep(5)  # Manter ativo por 5 segundos
+    time.sleep(20)  # Manter ativo por 5 segundos
     activate_relay2_and_relay4()  # Ativar IN2 e IN4
-    time.sleep(5)  # Manter ativo por 5 segundos
+    time.sleep(20)  # Manter ativo por 5 segundos
 except KeyboardInterrupt:
     cleanup()
