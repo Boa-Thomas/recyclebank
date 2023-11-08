@@ -1,7 +1,7 @@
 import serial
 
 # Initialize serial port
-ser = serial.Serial('/dev/ttyACM0', 9600)
+ser = serial.Serial('/dev/ttyUSB0', 9600)
 
 while True:
     if ser.in_waiting > 0:
