@@ -1,7 +1,17 @@
 import serial
 
-# Initialize serial port
-ser = serial.Serial('/dev/ttyACM0', 9600)
+# Replace '/dev/ttyACM0' with the serial port that your Arduino is connected to.
+# The baud rate should be set to the same rate you've set in your Arduino program (usually in Serial.begin()).
+serial_port = '/dev/ttyUSB0'
+baud_rate = 9600
+
+# Set up the serial connection
+ser = serial.Serial(serial_port, baud_rate, timeout=1)
+ser.flush()
+
+# Variables to store the latest voltage and current values
+input_voltage = None
+input_current = None
 
 while True:
     if ser.in_waiting > 0:
