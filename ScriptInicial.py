@@ -1,7 +1,10 @@
 import RPi.GPIO as GPIO
 import spidev
 import time
+import serial
 import requests  # For the webserver
+
+
 
 # Initialize SPI device
 spi = spidev.SpiDev()

@@ -1,12 +1,27 @@
 import serial
 
-# Initialize serial port
-ser = serial.Serial('/dev/ttyACM0', 9600)
+# Replace '/dev/ttyACM0' with the serial port that your Arduino is connected to.
+# The baud rate should be set to the same rate you've set in your Arduino program (usually in Serial.begin()).
+serial_port = '/dev/ttyACM0'
+baud_rate = 9600
+
+# Set up the serial connection
+ser = serial.serial_for_url(serial_port, baud_rate, timeout=1)
+ser.flush()
+
+# Variables to store the latest voltage and current values
+input_voltage = None
+input_current = None
 
 while True:
     if ser.in_waiting > 0:
-        line = ser.readline().decode('utf-8').strip()
-        sensor1_value, sensor2_value = map(int, line.split(","))
-        
-        # Now you can use sensor1_value and sensor2_value as you wish
-        print(f"Sensor 1: {sensor1_value}, Sensor 2: {sensor2_value}")
+        line = ser.readline().decode('utf-8').rstrip()
+        # Check if the line contains 'Input Voltage' or 'Input Current'
+        if "Input Voltage" in line:
+            # Parse the voltage value and store it in the variable
+            input_voltage = float(line.split('=')[1].strip())
+            print(f"Stored voltage value: {input_voltage} V")
+        elif "Input Current" in line:
+            # Parse the current value and store it in the variable
+            input_current = float(line.split('=')[1].strip())
+            print(f"Stored current value: {input_current} A")
