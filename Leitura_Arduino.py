@@ -6,7 +6,7 @@ serial_port = '/dev/ttyACM0'
 baud_rate = 9600
 
 # Set up the serial connection
-ser = serial.serial_for_url(serial_port, baud_rate, timeout=1)
+ser = serial.Serial(serial_port, baud_rate, timeout=1)
 ser.flush()
 
 # Variables to store the latest voltage and current values
