@@ -12,7 +12,7 @@ def setup_relays():
 def activate_relay1_and_relay4():
     GPIO.output(3, True) # Desativar IN2
     GPIO.output(4, True) # Desativar IN3
-    time.sleep(0.2)      # Delay de 100ms
+    time.sleep(0.1)      # Delay de 100ms
     GPIO.output(2, False)  # Ativar IN1
     GPIO.output(17, False) # Ativar IN4
 
@@ -26,7 +26,7 @@ def all_off():
 def activate_relay2_and_relay3():
     GPIO.output(2, True) # Desativar IN1
     GPIO.output(17, True) # Desativar IN4
-    time.sleep(0.2)       # Delay de 100ms
+    time.sleep(0.1)       # Delay de 100ms
     GPIO.output(3, False)  # Ativar IN2
     GPIO.output(4, False)  # Ativar IN3
 
