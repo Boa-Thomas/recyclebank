@@ -30,10 +30,11 @@ def cleanup():
 
 # Exemplo de uso:
 try:
-    setup_relays()
-    activate_relay1_and_relay4()  # Ativar IN1 e IN4
-    time.sleep(20)               # Manter ativo por 20 segundos
-    activate_relay2_and_relay3()  # Ativar IN2 e IN3
-    time.sleep(20)               # Manter ativo por 20 segundos
+	while 1:
+    		setup_relays()
+    		activate_relay1_and_relay4()  # Ativar IN1 e IN4
+    		time.sleep(2)               # Manter ativo por 20 segundos
+    		activate_relay2_and_relay3()  # Ativar IN2 e IN3
+    		time.sleep(2)               # Manter ativo por 20 segundos
 except KeyboardInterrupt:
     cleanup()
