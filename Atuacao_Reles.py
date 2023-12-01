@@ -39,9 +39,9 @@ try:
  while 1:
     all_off()
     activate_relay1_and_relay4()  # Ativar IN1 e IN4
-    time.sleep(2)               # Manter ativo por 20 segundos
+    time.sleep(10)               # Manter ativo por 20 segundos
     all_off()
     activate_relay2_and_relay3()  # Ativar IN2 e IN3
-    time.sleep(2)               # Manter ativo por 20 segundos
+    time.sleep(10)               # Manter ativo por 20 segundos
 except KeyboardInterrupt:
     cleanup()
