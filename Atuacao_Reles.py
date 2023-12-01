@@ -41,6 +41,7 @@ try:
     activate_relay1_and_relay4()  # Ativar IN1 e IN4
     time.sleep(10)               # Manter ativo por 20 segundos
     all_off()
+    time.sleep(10) 
     activate_relay2_and_relay3()  # Ativar IN2 e IN3
     time.sleep(10)               # Manter ativo por 20 segundos
 except KeyboardInterrupt:
